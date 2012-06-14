@@ -1,0 +1,50 @@
+<module>
+    <manifestVersion>1.0.0</manifestVersion>
+    <symbolicName>beam-globveg</symbolicName>
+    <version>1.0-SNAPSHOT</version>
+    <name>BEAM GlobVeg Project</name>
+    <description>BEAM GlobVeg Project.</description>
+
+    <vendor>Brockmann Consult GmbH</vendor>
+    <contactAddress>
+        Max Planck Str.2, 21502 Geesthacht (Germany)
+    </contactAddress>
+    <copyright>(C) 2012 by Brockmann Consult GmbH</copyright>
+    <url>http://envisat.esa.int/beam</url>
+    <licenseUrl>http://www.gnu.org/licenses/gpl.html</licenseUrl>
+
+    <changelog/>
+
+    <dependency>
+        <module>beam-core</module>
+    </dependency>
+    <dependency>
+        <module>beam-gpf</module>
+    </dependency>
+    <dependency>
+        <module>beam-visat</module>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <module>beam-envisat-reader</module>
+    </dependency>
+    <dependency>
+        <module>beam-meris-radiometry</module>
+    </dependency>
+
+    <categories>Application,Processor,MERIS</categories>
+
+    <extension point="beam-ui:actions">
+        <action>
+            <id>globveg</id>
+            <class>org.esa.beam.visat.actions.DefaultOperatorAction</class>
+            <operatorName>GlobVeg</operatorName>
+            <dialogTitle>GlobVeg</dialogTitle>
+            <targetProductNameSuffix>_GlobVeg</targetProductNameSuffix>
+            <text>GlobVeg...</text>
+            <shortDescr>GlobVeg chain.</shortDescr>
+            <parent>tool</parent>
+        </action>
+    </extension>
+
+</module>
