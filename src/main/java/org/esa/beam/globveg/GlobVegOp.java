@@ -53,6 +53,7 @@ public class GlobVegOp extends Operator {
     private Band validBand;
     private Band validFaparMask;
     private Band validLaiMask;
+    private Band cloudFreeBand;
 
     @Override
     public void initialize() throws OperatorException {
@@ -90,7 +91,14 @@ public class GlobVegOp extends Operator {
         computeChainOp.setSourceProduct(sourceProduct);
         computeChainOp.setParameter("algorithm", "GlobAlbedo");
         Product idepixProduct = computeChainOp.getTargetProduct();
-        ProductUtils.copyFlagBands(idepixProduct, targetProduct, true);
+        String cloudFreeExpression = "not l1_flags.INVALID " +
+                "and not cloud_classif_flags.F_WATER " +
+                "and not cloud_classif_flags.F_CLOUD " +
+                "and not cloud_classif_flags.F_CLOUD_BUFFER " +
+                "and not cloud_classif_flags.F_CLOUD_SHADOW " +
+                "and cloud_classif_flags.F_CLEAR_LAND";
+        BandMathsOp bandMathsOp3 = BandMathsOp.createBooleanExpressionBand(cloudFreeExpression, idepixProduct);
+        cloudFreeBand = bandMathsOp3.getTargetProduct().getBandAt(0);
 
         setTargetProduct(targetProduct);
     }
@@ -101,13 +109,14 @@ public class GlobVegOp extends Operator {
         Tile valid = targetTiles.get(validBand);
         Tile validFapar = getSourceTile(validFaparMask, targetRectangle);
         Tile validLai = getSourceTile(validLaiMask, targetRectangle);
+        Tile cloudFree = getSourceTile(cloudFreeBand, targetRectangle);
 
         for (int y = targetRectangle.y; y < targetRectangle.y + targetRectangle.height; y++) {
             final ProductData.UTC utcCurrentLine = ProductUtils.getScanLineTime(sourceProduct, y);
             double mjd = utcCurrentLine.getMJD();
             for (int x = targetRectangle.x; x < targetRectangle.x + targetRectangle.width; x++) {
                 time.setSample(x, y, mjd);
-                valid.setSample(x, y, validFapar.getSampleBoolean(x,y) && validLai.getSampleBoolean(x, y));
+                valid.setSample(x, y, validFapar.getSampleBoolean(x,y) && validLai.getSampleBoolean(x, y) && cloudFree.getSampleBoolean(x, y));
             }
         }
     }

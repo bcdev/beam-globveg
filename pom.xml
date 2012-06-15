@@ -114,7 +114,7 @@
                 <version>2.2</version>
                 <configuration>
                     <descriptors>
-                        <descriptor>src/main/assembly/bundle.xml</descriptor>
+                        <descriptor>src/main/assembly/calvalus-bundle.xml</descriptor>
                     </descriptors>
                 </configuration>
             </plugin>
