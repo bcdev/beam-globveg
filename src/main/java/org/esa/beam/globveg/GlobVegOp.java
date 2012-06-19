@@ -17,11 +17,9 @@
 package org.esa.beam.globveg;
 
 import com.bc.ceres.core.ProgressMonitor;
-import com.bc.ceres.glevel.MultiLevelImage;
 import org.esa.beam.framework.datamodel.Band;
 import org.esa.beam.framework.datamodel.Product;
 import org.esa.beam.framework.datamodel.ProductData;
-import org.esa.beam.framework.dataop.barithm.BandArithmetic;
 import org.esa.beam.framework.gpf.GPF;
 import org.esa.beam.framework.gpf.Operator;
 import org.esa.beam.framework.gpf.OperatorException;
@@ -50,7 +48,8 @@ public class GlobVegOp extends Operator {
     private Product sourceProduct;
 
     private Band timeBand;
-    private Band validBand;
+    private Band validFaparBand;
+    private Band validLaiBand;
     private Band validFaparMask;
     private Band validLaiMask;
     private Band cloudFreeBand;
@@ -70,11 +69,13 @@ public class GlobVegOp extends Operator {
         ProductUtils.copyTiePointGrids(sourceProduct, targetProduct);
         ProductUtils.copyGeoCoding(sourceProduct, targetProduct);
 
-        ProductUtils.copyBand("FAPAR", faparProduct, targetProduct, true);
-        ProductUtils.copyFlagBands(faparProduct, targetProduct, true);
+        Band band = ProductUtils.copyBand("FAPAR", faparProduct, "fapar", targetProduct, true);
+        band.setValidPixelExpression("valid_fapar == 1");
+        band.setNoDataValueUsed(false);
 
-        ProductUtils.copyBand("LAI", laiProduct, targetProduct, true);
-        ProductUtils.copyFlagBands(laiProduct, targetProduct, true);
+        band = ProductUtils.copyBand("LAI", laiProduct, "lai", targetProduct, true);
+        band.setValidPixelExpression("valid_lai == 1");
+        band.setNoDataValueUsed(false);
 
         String faparExpression = faparProduct.getBand("FAPAR").getValidMaskExpression();
         BandMathsOp bandMathsOp1 = BandMathsOp.createBooleanExpressionBand(faparExpression, faparProduct);
@@ -85,7 +86,8 @@ public class GlobVegOp extends Operator {
         validLaiMask = bandMathsOp2.getTargetProduct().getBandAt(0);
 
         timeBand = targetProduct.addBand("obs_time", ProductData.TYPE_FLOAT32);
-        validBand = targetProduct.addBand("valid", ProductData.TYPE_INT8);
+        validFaparBand = targetProduct.addBand("valid_fapar", ProductData.TYPE_INT8);
+        validLaiBand = targetProduct.addBand("valid_lai", ProductData.TYPE_INT8);
 
         ComputeChainOp computeChainOp = new ComputeChainOp();
         computeChainOp.setSourceProduct(sourceProduct);
@@ -106,9 +108,11 @@ public class GlobVegOp extends Operator {
     @Override
     public void computeTileStack(Map<Band, Tile> targetTiles, Rectangle targetRectangle, ProgressMonitor pm) throws OperatorException {
         Tile time = targetTiles.get(timeBand);
-        Tile valid = targetTiles.get(validBand);
-        Tile validFapar = getSourceTile(validFaparMask, targetRectangle);
-        Tile validLai = getSourceTile(validLaiMask, targetRectangle);
+        Tile targetValidFapar = targetTiles.get(validFaparBand);
+        Tile targetValidLai = targetTiles.get(validLaiBand);
+
+        Tile srcValidFapar = getSourceTile(validFaparMask, targetRectangle);
+        Tile srcValidLai = getSourceTile(validLaiMask, targetRectangle);
         Tile cloudFree = getSourceTile(cloudFreeBand, targetRectangle);
 
         for (int y = targetRectangle.y; y < targetRectangle.y + targetRectangle.height; y++) {
@@ -116,7 +120,9 @@ public class GlobVegOp extends Operator {
             double mjd = utcCurrentLine.getMJD();
             for (int x = targetRectangle.x; x < targetRectangle.x + targetRectangle.width; x++) {
                 time.setSample(x, y, mjd);
-                valid.setSample(x, y, validFapar.getSampleBoolean(x,y) && validLai.getSampleBoolean(x, y) && cloudFree.getSampleBoolean(x, y));
+                boolean isCloudFree = cloudFree.getSampleBoolean(x, y);
+                targetValidFapar.setSample(x, y, srcValidFapar.getSampleBoolean(x, y) && isCloudFree);
+                targetValidLai.setSample(x, y, srcValidLai.getSampleBoolean(x, y) && isCloudFree);
             }
         }
     }
