@@ -19,6 +19,7 @@
                 <include>*:beam-meris-l2auxdata*</include>
                 <include>*:beam-meris-radiometry*</include>
                 <include>*:beam-meris-sdr*</include>
+                <include>org.esa.beam:beam-processing*</include>
                 <include>org.esa.beam:beam-globveg*</include>
                 <include>org.esa.beam:beam-meris-veg*</include>
                 <include>it.jrc.beam.fapar:jrc-fapar*</include>
