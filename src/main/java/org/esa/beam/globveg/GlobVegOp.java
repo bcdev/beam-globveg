@@ -92,6 +92,14 @@ public class GlobVegOp extends Operator {
         ComputeChainOp computeChainOp = new ComputeChainOp();
         computeChainOp.setSourceProduct(sourceProduct);
         computeChainOp.setParameter("algorithm", "GlobAlbedo");
+        computeChainOp.setParameter("gaCopyRadiances", false);
+        computeChainOp.setParameter("gaCopyAnnotations", false);
+        computeChainOp.setParameter("gaComputeFlagsOnly", true);
+        computeChainOp.setParameter("gaCloudBufferWidth", 3);
+        computeChainOp.setParameter("gaUseL1bLandWaterFlag", false);
+        computeChainOp.setParameter("gaLcCloudBuffer", true);
+        computeChainOp.setParameter("gaComputeSchillerClouds", true);
+
         Product idepixProduct = computeChainOp.getTargetProduct();
         String cloudFreeExpression = "not l1_flags.INVALID " +
                 "and not cloud_classif_flags.F_WATER " +
