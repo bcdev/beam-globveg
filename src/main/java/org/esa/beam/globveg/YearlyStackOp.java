@@ -43,10 +43,10 @@ public class YearlyStackOp extends Operator {
     private String year;
 
     @Parameter(valueSet = {"10-iberia", "12-southafrica", "13-west-sudanian-savanna", "15-caatinga", "20-australia"},
-               description = "The site to process in 'Globveg' mode (to be given as 'hYYvXX')")
+               description = "The site to process.")
     private String globvegSite;
 
-    @Parameter(description = "The tile to process in 'Globveg' mode (to be given as 'hYYvXX')")
+    @Parameter(description = "The tile to process (to be given as 'hYYvXX')")
     private String globvegTile;
 
     @Parameter(defaultValue = "1.0f", description = "The scale factor of the target product")
