@@ -36,9 +36,6 @@ public class YearlyStackOp extends Operator {
     @Parameter(defaultValue = "", description = "Input data directory")
     private File inputDataDir;
 
-    @Parameter(defaultValue = "", description = "Output data directory")
-    private File outputDataDir;
-
     @Parameter(defaultValue = "", description = "The year to process")
     private String year;
 
