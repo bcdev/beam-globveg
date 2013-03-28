@@ -34,6 +34,11 @@
             <version>[4.10,5-SNAPSHOT)</version>
         </dependency>
         <dependency>
+            <groupId>org.esa.beam</groupId>
+            <artifactId>beam-binning2</artifactId>
+            <version>0.8.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>it.jrc.beam.fapar</groupId>
             <artifactId>jrc-fapar</artifactId>
             <version>2.5-SNAPSHOT</version>
