@@ -137,7 +137,7 @@ public class GlobVegOp extends Operator {
         pixelClassParam.put("gaCloudBufferWidth", 3);
         pixelClassParam.put("gaUseL1bLandWaterFlag", false);
         pixelClassParam.put("gaLcCloudBuffer", true);
-        pixelClassParam.put("gaComputeSchillerClouds", true);
+        pixelClassParam.put("gaApplyBlueDenseCloudAlgorithm", true);
 
         Product idepixProduct = GPF.createProduct(OperatorSpi.getOperatorAlias(GlobAlbedoOp.class), pixelClassParam, sourceProduct);
         ProductUtils.copyFlagBands(idepixProduct, targetProduct, true);
