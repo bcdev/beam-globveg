@@ -4,11 +4,8 @@ import com.bc.ceres.glevel.MultiLevelImage;
 import org.esa.beam.framework.datamodel.Product;
 
 import javax.media.jai.Interpolation;
-import javax.media.jai.InterpolationNearest;
-import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.operator.ScaleDescriptor;
-import java.awt.image.renderable.ParameterBlock;
 
 /**
  * Globveg Utility Class
@@ -24,13 +21,13 @@ public class GlobvegUtils {
     }
 
     public static RenderedOp scale(MultiLevelImage sourceImage, float scaleFactor) {
-        // here we downscale the difference image (scaleFactor < 1)
+        // here we scale the image if necessary (scaleFactor != 1)
         return ScaleDescriptor.create(sourceImage,
-                                      scaleFactor,
-                                      scaleFactor,
-                                      0.0f, 0.0f,
-                                      Interpolation.getInstance(
-                                              Interpolation.INTERP_NEAREST),
-                                      null);
+                scaleFactor,
+                scaleFactor,
+                0.0f, 0.0f,
+                Interpolation.getInstance(
+                        Interpolation.INTERP_NEAREST),
+                null);
     }
 }
