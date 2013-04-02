@@ -100,26 +100,25 @@ public class YearlyStackOp extends Operator {
             }
         }
 
-        final String faparTargetFileName = outputDataDir + File.separator + "L3_" + year + "_FAPAR.nc";
+        final String faparTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_FAPAR.tif";
         final File faparTargetFile = new File(faparTargetFileName);
-        // todo: this does not work! :-(
-//        final WriteOp faparWriteOp = new WriteOp(yearlyGlobvegFaparProduct, faparTargetFile, "GeoTIFF");
-        final WriteOp faparWriteOp = new WriteOp(yearlyGlobvegFaparProduct, faparTargetFile, "NetCDF4-CF");
+        final WriteOp faparWriteOp = new WriteOp(yearlyGlobvegFaparProduct, faparTargetFile, "GeoTIFF");
+//        final WriteOp faparWriteOp = new WriteOp(yearlyGlobvegFaparProduct, faparTargetFile, "NetCDF4-CF");
         faparWriteOp.writeProduct(ProgressMonitor.NULL);
 
-        final String laiTargetFileName = outputDataDir + File.separator + "L3_" + year + "_LAI.nc";
+        final String laiTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_LAI.tif";
         final File laiTargetFile = new File(laiTargetFileName);
-        final WriteOp laiWriteOp = new WriteOp(yearlyGlobvegLaiProduct, laiTargetFile, "NetCDF4-CF");
+        final WriteOp laiWriteOp = new WriteOp(yearlyGlobvegLaiProduct, laiTargetFile, "GeoTIFF");
         laiWriteOp.writeProduct(ProgressMonitor.NULL);
 
-        final String ndviTargetFileName = outputDataDir + File.separator + "L3_" + year + "_NDVI.nc";
+        final String ndviTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_NDVI.tif";
         final File ndviTargetFile = new File(ndviTargetFileName);
-        final WriteOp ndviWriteOp = new WriteOp(yearlyGlobvegNdviProduct, ndviTargetFile, "NetCDF4-CF");
+        final WriteOp ndviWriteOp = new WriteOp(yearlyGlobvegNdviProduct, ndviTargetFile, "GeoTIFF");
         ndviWriteOp.writeProduct(ProgressMonitor.NULL);
 
-        final String metaTargetFileName = outputDataDir + File.separator + "L3_" + year + "_meta.nc";
+        final String metaTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_meta.tif";
         final File metaTargetFile = new File(metaTargetFileName);
-        final WriteOp metaWriteOp = new WriteOp(yearlyGlobvegMetaProduct, metaTargetFile, "NetCDF4-CF");
+        final WriteOp metaWriteOp = new WriteOp(yearlyGlobvegMetaProduct, metaTargetFile, "GeoTIFF");
         metaWriteOp.writeProduct(ProgressMonitor.NULL);
 
         final Product dummyTargetProduct = new Product("a", "b", 0, 0);
@@ -161,7 +160,9 @@ public class YearlyStackOp extends Operator {
             }
         };
 
-        final String globvegDir = inputDataDir + File.separator + globvegSite + File.separator + year;
+//        final String globvegDir = inputDataDir + File.separator + globvegSite + File.separator + year;
+        // we expect as inputDataDir the directory where all files from one year for this region are located
+        final String globvegDir = inputDataDir.getAbsolutePath();
 
         final File[] globvegSourceProductFiles = (new File(globvegDir)).listFiles(globvegProductsFilter);
         List<Product> globvegSourceProductsList = new ArrayList<Product>();
@@ -177,13 +178,13 @@ public class YearlyStackOp extends Operator {
                     }
                 } catch (IOException e) {
                     System.err.println("WARNING: Globveg L3 netcdf file '" +
-                            globvegSourceProductFile.getName() + "' could not be read - skipping.");
+                                               globvegSourceProductFile.getName() + "' could not be read - skipping.");
                 }
             }
         }
         if (productIndex == 0) {
             System.out.println("No GlobVeg source products found for region " + globvegSite +
-                    ", year " + year + " - nothing to do.");
+                                       ", year " + year + " - nothing to do.");
         }
 
         return globvegSourceProductsList.toArray(new Product[globvegSourceProductsList.size()]);
