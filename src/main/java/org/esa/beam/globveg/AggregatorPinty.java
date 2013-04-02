@@ -44,6 +44,8 @@ public class AggregatorPinty extends AbstractAggregator {
 
     private final int varIndex;
     private final int maskIndex;
+    private final String mlName;
+    private final String tlName;
 
     public AggregatorPinty(VariableContext varCtx, String varName, String maskName, Number fillValue) {
         super(Descriptor.NAME, createSpatialFeatures(varName), createFeatures(varName), createFeatures(varName), fillValue);
@@ -55,6 +57,8 @@ public class AggregatorPinty extends AbstractAggregator {
             throw new IllegalArgumentException("varIndex < 0");
         }
         maskIndex = varCtx.getVariableIndex(maskName);
+        mlName = "ml." + varName;
+        tlName = "tl." + varName;
     }
 
     private static String[] createSpatialFeatures(String varName) {
@@ -97,8 +101,8 @@ public class AggregatorPinty extends AbstractAggregator {
 
     @Override
     public void initTemporal(BinContext ctx, WritableVector temporalVector) {
-        ctx.put("ml", new GrowableVector(256));
-        ctx.put("tl", new GrowableVector(256));
+        ctx.put(mlName, new GrowableVector(256));
+        ctx.put(tlName, new GrowableVector(256));
     }
 
 
@@ -106,8 +110,8 @@ public class AggregatorPinty extends AbstractAggregator {
     public void aggregateTemporal(BinContext ctx, Vector spatialVector, int numSpatialObs, WritableVector temporalVector) {
         // check necessary because we cannot suppress NaN values in spatial binning
         if (!Float.isNaN(spatialVector.get(0))) {
-            GrowableVector measurementsVec = ctx.get("ml");
-            GrowableVector timeVec = ctx.get("tl");
+            GrowableVector measurementsVec = ctx.get(mlName);
+            GrowableVector timeVec = ctx.get(tlName);
             measurementsVec.add(spatialVector.get(0));
             timeVec.add(spatialVector.get(1));
         }
@@ -115,8 +119,8 @@ public class AggregatorPinty extends AbstractAggregator {
 
     @Override
     public void completeTemporal(BinContext ctx, int numTemporalObs, WritableVector temporalVector) {
-        GrowableVector measurementsVec = ctx.get("ml");
-        GrowableVector timeVec = ctx.get("tl");
+        GrowableVector measurementsVec = ctx.get(mlName);
+        GrowableVector timeVec = ctx.get(tlName);
         float[] measurements = measurementsVec.getElements();
         float[] times = timeVec.getElements();
 
