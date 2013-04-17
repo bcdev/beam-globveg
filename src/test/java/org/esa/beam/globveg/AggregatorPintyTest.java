@@ -25,7 +25,7 @@ public class AggregatorPintyTest {
 
     @Test
     public void testMetadata() {
-        AggregatorPinty agg = new AggregatorPinty(new MyVariableContext("a", "va", "b", "vb"), "a", "va", null);
+        AggregatorPinty agg = new AggregatorPinty(new MyVariableContext("a", "va", "b", "vb"), "a", "va");
 
         assertEquals("PINTY", agg.getName());
 
@@ -48,7 +48,7 @@ public class AggregatorPintyTest {
 
     @Test
     public void testAggregator() {
-        AggregatorPinty agg = new AggregatorPinty(new MyVariableContext("a", "va", "b", "vb"), "a", "va", null);
+        AggregatorPinty agg = new AggregatorPinty(new MyVariableContext("a", "va", "b", "vb"), "a", "va");
 
         VectorImpl svec = vec(NaN, NaN);
         VectorImpl tvec = vec(NaN, NaN, NaN, NaN);

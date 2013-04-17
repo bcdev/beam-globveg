@@ -40,15 +40,13 @@ import java.util.Arrays;
  */
 public class AggregatorPinty extends AbstractAggregator {
 
-    public final static double EPS = 0.000000001;
-
     private final int varIndex;
     private final int maskIndex;
     private final String mlName;
     private final String tlName;
 
-    public AggregatorPinty(VariableContext varCtx, String varName, String maskName, Number fillValue) {
-        super(Descriptor.NAME, createSpatialFeatures(varName), createFeatures(varName), createFeatures(varName), fillValue);
+    public AggregatorPinty(VariableContext varCtx, String varName, String maskName) {
+        super(Descriptor.NAME, createSpatialFeatures(varName), createFeatures(varName), createFeatures(varName));
         if (varCtx == null) {
             throw new NullPointerException("varCtx");
         }
@@ -125,16 +123,16 @@ public class AggregatorPinty extends AbstractAggregator {
         float[] times = timeVec.getElements();
 
         if (measurements.length == 0) {
-            temporalVector.set(0, getOutputFillValue());
+            temporalVector.set(0, Float.NaN);
             temporalVector.set(1, Float.NaN);
             temporalVector.set(2, 0.0f);
             temporalVector.set(3, Float.NaN);
         } else {
             double sum = 0.0f;
             double sumSqr = 0.0f;
-            for (int i = 0; i < measurements.length; ++i) {
-                sum += measurements[i];
-                sumSqr += measurements[i] * measurements[i];
+            for (float measurement : measurements) {
+                sum += measurement;
+                sumSqr += measurement * measurement;
             }
             final float mean = (float) (sum / measurements.length);
             final float sigmaSqr = (float) (sumSqr / measurements.length - mean * mean);
@@ -184,8 +182,6 @@ public class AggregatorPinty extends AbstractAggregator {
         String varName;
         @Parameter
         String maskName;
-        @Parameter
-        Float fillValue;
 
         public Config() {
             super(Descriptor.NAME);
@@ -216,8 +212,7 @@ public class AggregatorPinty extends AbstractAggregator {
             PropertySet propertySet = aggregatorConfig.asPropertySet();
             return new AggregatorPinty(varCtx,
                                        (String) propertySet.getValue("varName"),
-                                       (String) propertySet.getValue("maskName"),
-                                       (Float) propertySet.getValue("fillValue"));
+                                       (String) propertySet.getValue("maskName"));
         }
     }
 }
