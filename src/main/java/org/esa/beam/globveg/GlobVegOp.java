@@ -57,6 +57,9 @@ public class GlobVegOp extends Operator {
     @Parameter(defaultValue = "false", label = " Write also simple NDVI = (rad10 - rad6)/(rad10 + rad6) to target product")
     private boolean outputNdviSimple = false;
 
+    @Parameter(defaultValue = "false", label = " Write all FAPAR product bands to target product")
+    private boolean copyFaparBands = false;
+
     private Band timeBand;
     private Band validFaparBand;
     private Band validLaiBand;
@@ -90,6 +93,14 @@ public class GlobVegOp extends Operator {
         Band band = ProductUtils.copyBand("FAPAR", faparProduct, "fapar", targetProduct, true);
         band.setValidPixelExpression("valid_fapar == 1");
         band.setNoDataValueUsed(false);
+
+        if (copyFaparBands) {
+            for (Band b:faparProduct.getBands()) {
+                if (!targetProduct.containsBand(b.getName())) {
+                    ProductUtils.copyBand(b.getName(), faparProduct, targetProduct, true);
+                }
+            }
+        }
 
         band = ProductUtils.copyBand("LAI", laiProduct, "lai", targetProduct, true);
         band.setValidPixelExpression("valid_lai == 1");

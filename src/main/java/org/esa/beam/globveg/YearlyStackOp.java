@@ -45,7 +45,13 @@ public class YearlyStackOp extends Operator {
     @Parameter(defaultValue = "", description = "The year to process")
     private String year;
 
-    @Parameter(valueSet = {"10-iberia", "12-southafrica", "13-west-sudanian-savanna", "15-caatinga", "20-australia"},
+    @Parameter(valueSet = {"10-iberia",
+                            "12-southafrica",
+                            "13-west-sudanian-savanna",
+                            "13-west-sudanian-savanna_west",
+                            "13-west-sudanian-savanna_east",
+                            "15-caatinga",
+                            "20-australia"},
             description = "The site to process.")
     private String globvegSite;
 
