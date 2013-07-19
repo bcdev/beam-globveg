@@ -79,7 +79,9 @@ public class GlobVegOp extends Operator {
         final Product correctedL1b = GPF.createProduct("Meris.CorrectRadiometry", GPF.NO_PARAMS, sourceProduct);
         final Product rad2reflProduct = GPF.createProduct(OperatorSpi.getOperatorAlias(Rad2ReflOp.class), GPF.NO_PARAMS, sourceProduct);
         final Product ndviSimpleProduct = GPF.createProduct(OperatorSpi.getOperatorAlias(NdviOp.class), GPF.NO_PARAMS, sourceProduct);
-        final Product faparProduct = GPF.createProduct("Fapar", GPF.NO_PARAMS, correctedL1b);
+        Map<String, Object> faparParms = new HashMap<String, Object>();
+//        faparParms.put("nirRedFilterFactor", 0.0);
+        final Product faparProduct = GPF.createProduct("Fapar", faparParms, correctedL1b);
         final Product laiProduct = GPF.createProduct("ToaVeg", GPF.NO_PARAMS, correctedL1b);
 
         Product targetProduct = new Product(sourceProduct.getName(), sourceProduct.getProductType(),
