@@ -93,7 +93,7 @@ public class GlobVegOp extends Operator {
         ProductUtils.copyGeoCoding(sourceProduct, targetProduct);
 
         Band band = ProductUtils.copyBand("FAPAR", faparProduct, "fapar", targetProduct, true);
-        band.setValidPixelExpression("valid_fapar == 1");
+        band.setValidPixelExpression("fapar >= 0.0");
         band.setNoDataValueUsed(false);
 
         if (copyFaparBands) {
