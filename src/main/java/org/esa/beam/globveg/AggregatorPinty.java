@@ -189,7 +189,11 @@ public class AggregatorPinty extends AbstractAggregator {
 
         @Override
         public String[] getVarNames() {
-            return new String[]{varName, maskName};
+            if (maskName != null) {
+                return new String[]{varName, maskName};
+            } else {
+                return new String[] { varName };
+            }
         }
     }
 
