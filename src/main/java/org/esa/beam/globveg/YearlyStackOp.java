@@ -47,6 +47,7 @@ public class YearlyStackOp extends Operator {
 
     @Parameter(valueSet = {"10-iberia",
                             "12-southafrica",
+                            "12-southafrica-simbabwe",
                             "13-west-sudanian-savanna",
                             "13-west-sudanian-savanna_west",
                             "13-west-sudanian-savanna_east",
