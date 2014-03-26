@@ -81,8 +81,11 @@ public class GlobVegOp extends Operator {
         final Product ndviSimpleProduct = GPF.createProduct(OperatorSpi.getOperatorAlias(NdviOp.class), GPF.NO_PARAMS, sourceProduct);
         Map<String, Object> faparParms = new HashMap<String, Object>();
 //        faparParms.put("nirRedFilterFactor", 0.0);
+        faparParms.put("outputFaparAsInt", true);
         final Product faparProduct = GPF.createProduct("Fapar", faparParms, correctedL1b);
-        final Product laiProduct = GPF.createProduct("ToaVeg", GPF.NO_PARAMS, correctedL1b);
+        Map<String, Object> laiParms = new HashMap<String, Object>();
+        laiParms.put("outputLaiAsInt", true);
+        final Product laiProduct = GPF.createProduct("ToaVeg", laiParms, correctedL1b);
 
         Product targetProduct = new Product(sourceProduct.getName(), sourceProduct.getProductType(),
                                             sourceProduct.getSceneRasterWidth(), sourceProduct.getSceneRasterHeight());
@@ -133,7 +136,8 @@ public class GlobVegOp extends Operator {
                 merisReflBands[i] = rad2reflProduct.getBand(Rad2ReflOp.RHO_TOA_BAND_PREFIX + "_" + (i + 1));
             }
 
-            ndviKgBand = targetProduct.addBand("ndvi_kg", ProductData.TYPE_FLOAT32);
+//            ndviKgBand = targetProduct.addBand("ndvi_kg", ProductData.TYPE_FLOAT32);
+            ndviKgBand = targetProduct.addBand("ndvi_kg", ProductData.TYPE_INT16);
 
             if (outputNdviSimple) {
                 // for comparison purpose:
@@ -198,7 +202,9 @@ public class GlobVegOp extends Operator {
 
                 if (computeNdviKg) {
                     if (isCloudFree) {
-                        targetNdviKg.setSample(x, y, computeNdviKg(x, y, merisReflectanceTiles));
+//                        targetNdviKg.setSample(x, y, computeNdviKg(x, y, merisReflectanceTiles));
+                        final float ndviKg = computeNdviKg(x, y, merisReflectanceTiles);
+                        targetNdviKg.setSample(x, y, (int) (ndviKg*10000.0f));
                     } else {
                         targetNdviKg.setSample(x, y, Float.NaN);
                     }
