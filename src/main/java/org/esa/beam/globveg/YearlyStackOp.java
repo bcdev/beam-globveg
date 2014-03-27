@@ -29,10 +29,10 @@ import java.util.List;
  * @author olafd
  */
 @OperatorMetadata(alias = "Globveg.Yearlystack", version = "1.0",
-        authors = "Olaf Danne",
-        copyright = "(c) 2013 Brockmann Consult",
-        internal = true,
-        description = "Operator to build yearly stacks of biweekly Globveg products.")
+                  authors = "Olaf Danne",
+                  copyright = "(c) 2013 Brockmann Consult",
+                  internal = true,
+                  description = "Operator to build yearly stacks of biweekly Globveg products.")
 public class YearlyStackOp extends Operator {
     public static final String VERSION = "1.0-SNAPSHOT";
 
@@ -46,14 +46,14 @@ public class YearlyStackOp extends Operator {
     private String year;
 
     @Parameter(valueSet = {"10-iberia",
-                            "12-southafrica",
-                            "12-southafrica-simbabwe",
-                            "13-west-sudanian-savanna",
-                            "13-west-sudanian-savanna_west",
-                            "13-west-sudanian-savanna_east",
-                            "15-caatinga",
-                            "20-australia"},
-            description = "The site to process.")
+            "12-southafrica",
+            "12-southafrica-simbabwe",
+            "13-west-sudanian-savanna",
+            "13-west-sudanian-savanna_west",
+            "13-west-sudanian-savanna_east",
+            "15-caatinga",
+            "20-australia"},
+               description = "The site to process.")
     private String globvegSite;
 
     @Parameter(defaultValue = "1.0f", description = "The scale factor of the target product")
@@ -84,25 +84,33 @@ public class YearlyStackOp extends Operator {
                 }
 
                 if (b.getName().equalsIgnoreCase("fapar")) {
-                    yearlyGlobvegFaparProduct.addBand(targetBandName, b.getDataType());
-                    yearlyGlobvegFaparProduct.getBand(targetBandName).setSourceImage(targetImage);
-                    yearlyGlobvegFaparProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
-                    yearlyGlobvegFaparProduct.getBand(targetBandName).setNoDataValueUsed(true);
+                    if (!yearlyGlobvegFaparProduct.containsBand(targetBandName)) {
+                        yearlyGlobvegFaparProduct.addBand(targetBandName, b.getDataType());
+                        yearlyGlobvegFaparProduct.getBand(targetBandName).setSourceImage(targetImage);
+                        yearlyGlobvegFaparProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
+                        yearlyGlobvegFaparProduct.getBand(targetBandName).setNoDataValueUsed(true);
+                    }
                 } else if (b.getName().equalsIgnoreCase("lai")) {
-                    yearlyGlobvegLaiProduct.addBand(targetBandName, b.getDataType());
-                    yearlyGlobvegLaiProduct.getBand(targetBandName).setSourceImage(targetImage);
-                    yearlyGlobvegLaiProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
-                    yearlyGlobvegLaiProduct.getBand(targetBandName).setNoDataValueUsed(true);
+                    if (!yearlyGlobvegLaiProduct.containsBand(targetBandName)) {
+                        yearlyGlobvegLaiProduct.addBand(targetBandName, b.getDataType());
+                        yearlyGlobvegLaiProduct.getBand(targetBandName).setSourceImage(targetImage);
+                        yearlyGlobvegLaiProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
+                        yearlyGlobvegLaiProduct.getBand(targetBandName).setNoDataValueUsed(true);
+                    }
                 } else if (b.getName().equalsIgnoreCase("ndvi_kg_max")) {
-                    yearlyGlobvegNdviProduct.addBand(targetBandName, b.getDataType());
-                    yearlyGlobvegNdviProduct.getBand(targetBandName).setSourceImage(targetImage);
-                    yearlyGlobvegNdviProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
-                    yearlyGlobvegNdviProduct.getBand(targetBandName).setNoDataValueUsed(true);
+                    if (!yearlyGlobvegNdviProduct.containsBand(targetBandName)) {
+                        yearlyGlobvegNdviProduct.addBand(targetBandName, b.getDataType());
+                        yearlyGlobvegNdviProduct.getBand(targetBandName).setSourceImage(targetImage);
+                        yearlyGlobvegNdviProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
+                        yearlyGlobvegNdviProduct.getBand(targetBandName).setNoDataValueUsed(true);
+                    }
                 } else if (b.getName().equalsIgnoreCase("num_obs")) {
-                    yearlyGlobvegMetaProduct.addBand(targetBandName, b.getDataType());
-                    yearlyGlobvegMetaProduct.getBand(targetBandName).setSourceImage(targetImage);
-                    yearlyGlobvegMetaProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
-                    yearlyGlobvegMetaProduct.getBand(targetBandName).setNoDataValueUsed(true);
+                    if (!yearlyGlobvegMetaProduct.containsBand(targetBandName)) {
+                        yearlyGlobvegMetaProduct.addBand(targetBandName, b.getDataType());
+                        yearlyGlobvegMetaProduct.getBand(targetBandName).setSourceImage(targetImage);
+                        yearlyGlobvegMetaProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
+                        yearlyGlobvegMetaProduct.getBand(targetBandName).setNoDataValueUsed(true);
+                    }
                 }
             }
         }
@@ -150,9 +158,9 @@ public class YearlyStackOp extends Operator {
         final int height = (int) (globvegSourceProducts[0].getSceneRasterHeight() * scaleFactor);
 
         Product yearlyProduct = new Product("DIVERSITY_GLOBVEG_" + productType,
-                "DIVERSITY_GLOBVEG_" + productType,
-                width,
-                height);
+                                            "DIVERSITY_GLOBVEG_" + productType,
+                                            width,
+                                            height);
 
         ProductUtils.copyGeoCoding(globvegSourceProducts[0], yearlyProduct);
 
