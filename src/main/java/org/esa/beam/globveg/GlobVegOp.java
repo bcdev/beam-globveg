@@ -81,7 +81,7 @@ public class GlobVegOp extends Operator {
         final Product ndviSimpleProduct = GPF.createProduct(OperatorSpi.getOperatorAlias(NdviOp.class), GPF.NO_PARAMS, sourceProduct);
         Map<String, Object> faparParms = new HashMap<String, Object>();
 //        faparParms.put("nirRedFilterFactor", 0.0);
-        faparParms.put("outputFaparAsInt", true);
+        faparParms.put("outputFaparAsInt", false); // set back to false on behalf of UG, 20140404
         final Product faparProduct = GPF.createProduct("Fapar", faparParms, correctedL1b);
         Map<String, Object> laiParms = new HashMap<String, Object>();
         laiParms.put("outputLaiAsInt", true);
