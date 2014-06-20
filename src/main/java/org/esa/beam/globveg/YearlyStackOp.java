@@ -47,7 +47,7 @@ public class YearlyStackOp extends Operator {
 
     @Parameter(valueSet = {"10-iberia",
             "12-southafrica",
-            "12-southafrica-simbabwe",
+            "21-southern-africa-east",
             "13-west-sudanian-savanna",
             "13-west-sudanian-savanna_west",
             "13-west-sudanian-savanna_east",
@@ -68,9 +68,9 @@ public class YearlyStackOp extends Operator {
         Arrays.sort(globvegSourceProducts, new ProductNameComparator());
 
         final Product yearlyGlobvegFaparProduct = createYearlyProduct("FAPAR");
-        final Product yearlyGlobvegLaiProduct = createYearlyProduct("LAI");
         final Product yearlyGlobvegNdviProduct = createYearlyProduct("NDVI");
-        final Product yearlyGlobvegMetaProduct = createYearlyProduct("META");
+//        final Product yearlyGlobvegLaiProduct = createYearlyProduct("LAI");
+//        final Product yearlyGlobvegMetaProduct = createYearlyProduct("META");
 
         for (Product product : globvegSourceProducts) {
             for (Band b : product.getBands()) {
@@ -91,12 +91,12 @@ public class YearlyStackOp extends Operator {
                         yearlyGlobvegFaparProduct.getBand(targetBandName).setNoDataValueUsed(true);
                     }
                 } else if (b.getName().equalsIgnoreCase("lai")) {
-                    if (!yearlyGlobvegLaiProduct.containsBand(targetBandName)) {
-                        yearlyGlobvegLaiProduct.addBand(targetBandName, b.getDataType());
-                        yearlyGlobvegLaiProduct.getBand(targetBandName).setSourceImage(targetImage);
-                        yearlyGlobvegLaiProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
-                        yearlyGlobvegLaiProduct.getBand(targetBandName).setNoDataValueUsed(true);
-                    }
+//                    if (!yearlyGlobvegLaiProduct.containsBand(targetBandName)) {
+//                        yearlyGlobvegLaiProduct.addBand(targetBandName, b.getDataType());
+//                        yearlyGlobvegLaiProduct.getBand(targetBandName).setSourceImage(targetImage);
+//                        yearlyGlobvegLaiProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
+//                        yearlyGlobvegLaiProduct.getBand(targetBandName).setNoDataValueUsed(true);
+//                    }
                 } else if (b.getName().equalsIgnoreCase("ndvi_kg_max")) {
                     if (!yearlyGlobvegNdviProduct.containsBand(targetBandName)) {
                         yearlyGlobvegNdviProduct.addBand(targetBandName, b.getDataType());
@@ -105,12 +105,12 @@ public class YearlyStackOp extends Operator {
                         yearlyGlobvegNdviProduct.getBand(targetBandName).setNoDataValueUsed(true);
                     }
                 } else if (b.getName().equalsIgnoreCase("num_obs")) {
-                    if (!yearlyGlobvegMetaProduct.containsBand(targetBandName)) {
-                        yearlyGlobvegMetaProduct.addBand(targetBandName, b.getDataType());
-                        yearlyGlobvegMetaProduct.getBand(targetBandName).setSourceImage(targetImage);
-                        yearlyGlobvegMetaProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
-                        yearlyGlobvegMetaProduct.getBand(targetBandName).setNoDataValueUsed(true);
-                    }
+//                    if (!yearlyGlobvegMetaProduct.containsBand(targetBandName)) {
+//                        yearlyGlobvegMetaProduct.addBand(targetBandName, b.getDataType());
+//                        yearlyGlobvegMetaProduct.getBand(targetBandName).setSourceImage(targetImage);
+//                        yearlyGlobvegMetaProduct.getBand(targetBandName).setNoDataValue(b.getNoDataValue());
+//                        yearlyGlobvegMetaProduct.getBand(targetBandName).setNoDataValueUsed(true);
+//                    }
                 }
             }
         }
@@ -121,20 +121,20 @@ public class YearlyStackOp extends Operator {
 //        final WriteOp faparWriteOp = new WriteOp(yearlyGlobvegFaparProduct, faparTargetFile, "NetCDF4-CF");
         faparWriteOp.writeProduct(ProgressMonitor.NULL);
 
-        final String laiTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_LAI.tif";
-        final File laiTargetFile = new File(laiTargetFileName);
-        final WriteOp laiWriteOp = new WriteOp(yearlyGlobvegLaiProduct, laiTargetFile, "GeoTIFF");
-        laiWriteOp.writeProduct(ProgressMonitor.NULL);
+//        final String laiTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_LAI.tif";
+//        final File laiTargetFile = new File(laiTargetFileName);
+//        final WriteOp laiWriteOp = new WriteOp(yearlyGlobvegLaiProduct, laiTargetFile, "GeoTIFF");
+//        laiWriteOp.writeProduct(ProgressMonitor.NULL);
 
         final String ndviTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_NDVI.tif";
         final File ndviTargetFile = new File(ndviTargetFileName);
         final WriteOp ndviWriteOp = new WriteOp(yearlyGlobvegNdviProduct, ndviTargetFile, "GeoTIFF");
         ndviWriteOp.writeProduct(ProgressMonitor.NULL);
 
-        final String metaTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_meta.tif";
-        final File metaTargetFile = new File(metaTargetFileName);
-        final WriteOp metaWriteOp = new WriteOp(yearlyGlobvegMetaProduct, metaTargetFile, "GeoTIFF");
-        metaWriteOp.writeProduct(ProgressMonitor.NULL);
+//        final String metaTargetFileName = outputDataDir + File.separator + "L3_" + year + "_" + globvegSite + "_meta.tif";
+//        final File metaTargetFile = new File(metaTargetFileName);
+//        final WriteOp metaWriteOp = new WriteOp(yearlyGlobvegMetaProduct, metaTargetFile, "GeoTIFF");
+//        metaWriteOp.writeProduct(ProgressMonitor.NULL);
 
         final Product dummyTargetProduct = new Product("a", "b", 0, 0);
         setTargetProduct(dummyTargetProduct);
